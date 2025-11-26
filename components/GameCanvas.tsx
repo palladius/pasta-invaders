@@ -330,7 +330,7 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
   };
 
   return (
-    <div className="relative w-full h-full flex flex-col overflow-hidden bg-slate-900">
+    <div className={`relative w-full h-full flex flex-col overflow-hidden ${gameState === GameState.PLAYING ? 'bg-slate-900' : 'bg-transparent'}`}>
       {/* Canvas Container */}
       <div ref={containerRef} className="flex-grow relative">
         <canvas 

@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import GameCanvas from './components/GameCanvas';
 import { GameState } from './types';
-import { getNonnaCommentary } from './services/geminiService';
 
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>(GameState.MENU);
   const [score, setScore] = useState(0);
   const [wave, setWave] = useState(1);
   const [highScore, setHighScore] = useState(0);
-  const [nonnaComment, setNonnaComment] = useState<string>("");
-  const [isLoadingComment, setIsLoadingComment] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem('pasta-invaders-highscore');
@@ -23,23 +20,9 @@ const App: React.FC = () => {
     }
   }, [score, highScore]);
 
-  // Handle Game Over - Fetch Commentary
-  useEffect(() => {
-    if (gameState === GameState.GAME_OVER) {
-      const fetchCommentary = async () => {
-        setIsLoadingComment(true);
-        const comment = await getNonnaCommentary(score, wave, false);
-        setNonnaComment(comment);
-        setIsLoadingComment(false);
-      };
-      fetchCommentary();
-    }
-  }, [gameState, score, wave]);
-
   const startGame = () => {
     setScore(0);
     setWave(1);
-    setNonnaComment("");
     setGameState(GameState.PLAYING);
   };
 
@@ -117,21 +100,6 @@ const App: React.FC = () => {
                  </div>
               </div>
               
-              {/* Nonna's Commentary Section */}
-              <div className="mt-4 border-t border-white/10 pt-4">
-                <p className="text-xs uppercase text-slate-400 mb-2">Nonna says:</p>
-                <div className="min-h-[80px] flex items-center justify-center">
-                  {isLoadingComment ? (
-                    <div className="flex gap-2">
-                      <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-white rounded-full animate-bounce delay-75"></div>
-                      <div className="w-2 h-2 bg-white rounded-full animate-bounce delay-150"></div>
-                    </div>
-                  ) : (
-                    <p className="text-lg italic font-serif text-green-100">"{nonnaComment}"</p>
-                  )}
-                </div>
-              </div>
             </div>
 
             <button 
